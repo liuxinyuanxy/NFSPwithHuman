@@ -1,0 +1,28 @@
+{
+    "name" : "nfsp_player1",
+    "checkpoint_dir" : "models/nfsp",
+    "anticipatory_param" : 0.1,
+    "learn_every" : 64,
+    "sl_kwargs" : {
+        "hidden_layers_sizes" : [512, 512, 512, 512, 512, 512],
+        "optimizer_str" : "sgd",
+        "batch_size" : 512,
+        "min_buffer_size_to_learn" : 1000,
+        "learning_rate" : 0.01,
+        "reservoir_buffer_capacity" : 1e6
+    },
+    "rl_kwargs" : {
+            "hidden_layers_sizes" : [512, 512, 512, 512, 512, 512],
+            "optimizer_str" : "sgd",
+            "batch_size" : 512,
+            "min_buffer_size_to_learn" : 1000,
+            "learning_rate" : 0.01,
+            "replay_buffer_capacity" : 1000000,
+            "update_target_network_every" : 50,
+            "discount_factor" : 0.99,
+            "epsilon_start": 0.9,
+            "epsilon_end" : 0.1,
+            "epsilon_decay_steps":1e5
+    }
+
+}
