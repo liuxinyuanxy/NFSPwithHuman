@@ -84,7 +84,7 @@ class NFSPPlayer(BasePokerPlayer):
     #         self._owner = owner
 
     #     def info_cards(self, cards):
-    #         info_cards = np.zeros(52, dtype = np.float)
+    #         info_cards = np.zeros(52, dtype = float)
     #         idx = np.array([Card.from_str(card).to_id()-1 for card in cards])
     #         info_cards[idx] = 1.0
     #         return info_cards
@@ -95,10 +95,10 @@ class NFSPPlayer(BasePokerPlayer):
     #                             self._owner._round_initial_stack-[player['stack'] for player in round_state['seats'] if player['uuid'] == self._owner.uuid][0],
     #                             sum([pot['amount'] for pot in round_state['pot']['side']], round_state['pot']['main']['amount'])
     #                         ], 
-    #                         dtype = np.float)
+    #                         dtype = float)
 
     #     def info_street(self, round_state):
-    #         info_street = np.zeros(5, dtype = np.float)
+    #         info_street = np.zeros(5, dtype = float)
     #         idx = STREET_PARSE.get(round_state['street'])
     #         if not idx is None:
     #             info_street[idx] = 1.0
@@ -106,8 +106,8 @@ class NFSPPlayer(BasePokerPlayer):
         
     #     def info_actions_legal_actions(self, valid_actions = None, round_state = None):
     #         num_actions = self._owner._num_actions
-    #         info_actions = np.zeros(5, dtype = np.float)
-    #         legal_actions = np.zeros(num_actions, dtype = np.bool)
+    #         info_actions = np.zeros(5, dtype = float)
+    #         legal_actions = np.zeros(num_actions, dtype = bool)
 
     #         if valid_actions:
     #             stack = [player['stack'] for player in round_state['seats'] if player['uuid'] == self._owner.uuid][0]
@@ -134,12 +134,7 @@ class NFSPPlayer(BasePokerPlayer):
             
 
 
-    def __init__(self,
-                 config_dir,
-                 name,
-                 is_evaluation,
-                 device
-                 ):
+    def __init__(self, config_dir, name, is_evaluation, device):
 
         self._is_evaluation = is_evaluation
         self._num_actions = PyPokerEngineStateExtractor.NUM_ACTIONS

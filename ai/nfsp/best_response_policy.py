@@ -70,11 +70,11 @@ class BestResponsePolicy:
         with torch.no_grad():
             rough_qs = self._q_network(info_state).cpu().numpy().flatten()
         
-        legal_qs = np.ones(self._num_actions, dtype = np.float)*(-float('inf'))
+        legal_qs = np.ones(self._num_actions, dtype = float)*(-float('inf'))
         legal_qs[legal_actions] = rough_qs[legal_actions]
 
         epsilon = self._epsilons[min(self._total_t, self._epsilons.size-1)]
-        action_probs = np.zeros(self._num_actions, dtype=np.float)
+        action_probs = np.zeros(self._num_actions, dtype=float)
         best_action = np.argmax(legal_qs)
         action_probs[legal_actions] = epsilon/sum(legal_actions)
         action_probs[best_action] += (1.0 - epsilon)

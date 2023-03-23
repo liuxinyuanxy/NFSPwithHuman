@@ -14,6 +14,9 @@ class HumanAndNFSPPlayer(NFSPPlayer):
                  input_receiver=None
                  ):
         super().__init__(config_dir, name, is_evaluation, device)
+        self._round_initial_stack = None
+        self._last_info_state = None
+        self.game_info = None
         self.input_receiver = input_receiver if input_receiver else self.__gen_raw_input_wrapper()
 
     def declare_action(self, valid_actions, hole_card, round_state):
@@ -31,7 +34,6 @@ class HumanAndNFSPPlayer(NFSPPlayer):
                                                   is_human=True)
         sorted_indices = np.argsort(actions)
         sorted_indices = sorted_indices[::-1]
-
         ranked_actions = [[i, actions[i]] for i in sorted_indices]
         for action_code, p in ranked_actions:
             if p <= 0:
@@ -42,11 +44,11 @@ class HumanAndNFSPPlayer(NFSPPlayer):
             elif action_code == self._num_actions - 1:
                 action = 'call'
                 amount = [act['amount'] for act in valid_actions if act['action'] == action][0]
-            elif action_code >= 0 and action_code < self._num_actions - 2:
+            elif 0 <= action_code < self._num_actions - 2:
                 action = 'raise'
                 amount = PyPokerEngineStateExtractor.parse_raiseby(info_state, action_code) \
                          + max(
-                    [0.0] + [action['amount'] for action in round_state['action_histories'][round_state['street']] if
+                    [0.0] + [float(action['amount']) for action in round_state['action_histories'][round_state['street']] if
                              action['uuid'] == self.uuid])
             else:
                 raise "error action"

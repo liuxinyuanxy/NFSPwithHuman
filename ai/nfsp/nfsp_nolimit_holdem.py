@@ -69,7 +69,7 @@ class StateExtractor(metaclass = abc.ABCMeta):
 
     @classmethod
     def info_cards(cls, cards):
-        info_cards = np.zeros(52, dtype = np.float)
+        info_cards = np.zeros(52, dtype = float)
         idx = np.array([cls._card2index(card) for card in cards])
         info_cards[idx] = 1.0
         return info_cards
@@ -86,8 +86,8 @@ class StateExtractor(metaclass = abc.ABCMeta):
         return np.array([
                             mychip,
                             pot
-                        ], 
-                        dtype = np.float)
+                        ],
+                        dtype = float)
 
     @classmethod
     @abc.abstractmethod
@@ -97,7 +97,7 @@ class StateExtractor(metaclass = abc.ABCMeta):
     @classmethod
     def info_street(cls, **kwargs):
         street = cls._get_street(**kwargs)
-        info_street = np.zeros(5, dtype = np.float)
+        info_street = np.zeros(5, dtype = float)
         idx = STREET_PARSE.get(street)
         if not idx is None:
             info_street[idx] = 1.0
@@ -107,12 +107,12 @@ class StateExtractor(metaclass = abc.ABCMeta):
     @abc.abstractmethod
     def _get_valid_action(cls, **kwargs):
         pass
-    
+
     @classmethod
     def info_actions_legal_actions(cls, **kwargs):
         num_actions = len(Action)
-        info_actions = np.zeros(5, dtype = np.float)
-        legal_actions = np.zeros(num_actions, dtype = np.bool)
+        info_actions = np.zeros(5, dtype = float)
+        legal_actions = np.zeros(num_actions, dtype = bool)
 
         valid_actions, stack= cls._get_valid_action(**kwargs)
         # {
@@ -175,10 +175,10 @@ def _to_legal_actions(info_state):
     legal_actions = torch.ones(num_actions).bool().to(device = info_state.device)
     if info_state[59] < 1:
         legal_actions[num_actions-2] = False
-    
+
     if info_state[61] < 1:
         legal_actions[:num_actions-2] = False
-    
+
     else:
         if info_state[62]>info_state[63]:
             legal_actions[:num_actions-3] = False
@@ -202,13 +202,13 @@ def sl_loss_backward(info_states, outputs, actions):
     ignored_predict = torch.ones([batch_size, num_actions]).float().to(device = device)
     ignored_predict[~legal_actions] = rough_probs[~legal_actions]
     loss1 = F.mse_loss(torch.sum(byvalues*ignored_predict, dim = 1)/100, torch.zeros(batch_size).float().to(device = device))
-    
+
     label = torch.gather(input = byvalues, dim = 1, index = actions)/100#让raise 范围缩减至[2,200]
-    
+
     pruned_outputs = torch.ones([batch_size, num_actions]).float().to(device = device)*(-sys.maxsize)
     pruned_outputs[legal_actions] = outputs[legal_actions]
     probs = F.softmax(pruned_outputs, dim = 1)
-    
+
     predict = torch.sum(byvalues*probs, dim = 1)/100#
 
     loss2 = F.mse_loss(predict, label.squeeze(1))
