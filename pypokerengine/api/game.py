@@ -14,9 +14,9 @@ def start_poker(config, verbose=2):
     result_message = dealer.start_game(config.max_round)
     return _format_result(result_message)
 
-def my_start_poker(config, initial_btn = 0, verbose=2):
+def my_start_poker(config, initial_btn = 0, verbose=2, cheat_deck=None):
     config.validation()
-    dealer = Dealer(config.sb_amount, config.initial_stack, config.ante)
+    dealer = Dealer(config.sb_amount, config.initial_stack, config.ante, cheat_deck=cheat_deck)
     dealer.set_verbose(verbose)
     dealer.set_blind_structure(config.blind_structure)
     for info in config.players_info:

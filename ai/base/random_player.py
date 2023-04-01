@@ -15,8 +15,8 @@ class RandomPlayer(BasePokerPlayer):
 
     def declare_action(self, valid_actions, hole_card, round_state):
         choice = self.__choice_action(valid_actions)
-        print(valid_actions)
-        print(choice)
+        # print(valid_actions)
+        # print(choice)
         action = choice["action"]
         amount = choice["amount"]
         if action == "raise":
